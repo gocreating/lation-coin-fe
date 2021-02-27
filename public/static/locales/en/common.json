@@ -32,5 +32,19 @@
   "error": {
     "title": "Error",
     "description": "Something weng wrong."
+  },
+  "me": {
+    "setting": {
+      "title": "Setting"
+    },
+    "funding": {
+      "title": "Funding"
+    },
+    "report": {
+      "title": "Report"
+    },
+    "payment": {
+      "title": "Payment"
+    }
   }
 }

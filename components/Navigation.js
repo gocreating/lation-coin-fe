@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
@@ -9,6 +10,7 @@ import { i18n, withTranslation, Link } from '../i18n'
 import { API_HOST } from '../utils/config'
 
 const Navigation = ({ t }) => {
+  const router = useRouter()
   const dispatch = useDispatch()
   const isAuth = useSelector(authSelectors.getIsAuth)
   return (
@@ -47,16 +49,41 @@ const Navigation = ({ t }) => {
                   {t('navbar.logout')}
                 </Nav.Link>
               ) : (
-                <Link href={`${API_HOST}/auth/line`} passHref>
-                  <Nav.Link as={Button} variant="success" style={{ color: 'white' }}>
+                  <Nav.Link as={Button} href={`${API_HOST}/auth/line`} variant="success" style={{ color: 'white' }}>
                     <i className="fab fa-line fa-lg"></i> {t('navbar.lineLogin')}
                   </Nav.Link>
-                </Link>
-              )}
+                )}
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {isAuth && (
+        <Container>
+          <hr />
+          <Nav className="justify-content-center" variant="pills" activeKey={router.pathname}>
+            <Nav.Item>
+              <Link href="/me/setting" passHref>
+                <Nav.Link eventKey="/me/setting">{t('me.setting.title')}</Nav.Link>
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link href="/me/funding" passHref>
+                <Nav.Link eventKey="/me/funding">{t('me.funding.title')}</Nav.Link>
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link href="/me/report" passHref>
+                <Nav.Link eventKey="/me/report">{t('me.report.title')}</Nav.Link>
+              </Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link href="/me/payment" passHref>
+                <Nav.Link eventKey="/me/payment">{t('me.payment.title')}</Nav.Link>
+              </Link>
+            </Nav.Item>
+          </Nav>
+        </Container>
+      )}
     </>
   )
 }

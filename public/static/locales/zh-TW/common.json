@@ -32,5 +32,19 @@
   "error": {
     "title": "錯誤",
     "description": "發生無法預期的錯誤"
+  },
+  "me": {
+    "setting": {
+      "title": "調整設定"
+    },
+    "funding": {
+      "title": "融資狀況"
+    },
+    "report": {
+      "title": "收益報告"
+    },
+    "payment": {
+      "title": "儲值紀錄"
+    }
   }
 }
