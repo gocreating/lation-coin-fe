@@ -1,0 +1,36 @@
+{
+  "site": {
+    "titleSuffix": " | Coin",
+    "title": "Coin",
+    "description": "幣勝提供數位貨幣套利服務，僅需銅板即可投資",
+    "keywords": "Digital Currency,Crypto Currency,Funding,Spot,Future,Arbitrage,Investment"
+  },
+  "navbar": {
+    "title": "Coin",
+    "usage": "Usage",
+    "pricing": "Pricing",
+    "lineLogin": "Login with Line",
+    "logout": "Logout"
+  },
+  "footer": {
+    "poweredBy": "Powered by <brand>Lation</brand>"
+  },
+  "home": {
+    "title": "Coin",
+    "description": "幣勝提供數位貨幣套利服務，僅需銅板即可投資"
+  },
+  "auth": {
+    "loginError": {
+      "title": "Login Failed",
+      "cta": "Back to Homepage"
+    }
+  },
+  "404": {
+    "title": "404",
+    "description": "This page could not be found."
+  },
+  "error": {
+    "title": "Error",
+    "description": "Something weng wrong."
+  }
+}
