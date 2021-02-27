@@ -3,7 +3,7 @@ import { withTranslation } from '../../i18n'
 
 const FundingPage = ({ t }) => {
   return (
-    <AppLayout title={t('me.funding.title')} titleSuffix={false}>
+    <AppLayout title={t('me.funding.title')}>
       {t('me.funding.title')}
     </AppLayout>
   )

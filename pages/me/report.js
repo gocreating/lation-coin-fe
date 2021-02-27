@@ -3,7 +3,7 @@ import { withTranslation } from '../../i18n'
 
 const ReportPage = ({ t }) => {
   return (
-    <AppLayout title={t('me.report.title')} titleSuffix={false}>
+    <AppLayout title={t('me.report.title')}>
       {t('me.report.title')}
     </AppLayout>
   )
