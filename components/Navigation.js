@@ -59,7 +59,7 @@ const Navigation = ({ t }) => {
       </Navbar>
       {isAuth && (
         <Container>
-          <hr />
+          <hr style={{ marginTop: '0px' }} />
           <Nav className="justify-content-center" variant="pills" activeKey={router.pathname}>
             <Nav.Item>
               <Link href="/me/setting" passHref>
