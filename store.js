@@ -3,9 +3,11 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import authReducer from './ducks/auth'
+import userReducer from './ducks/user'
 
 const appReducer = combineReducers({
   auth: authReducer,
+  user: userReducer,
 })
 
 const rootReducer = (state = {}, action) => {
