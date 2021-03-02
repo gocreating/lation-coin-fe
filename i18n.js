@@ -9,4 +9,7 @@ module.exports = new NextI18Next({
   localePath: path.resolve('./public/static/locales'),
   keySeparator: '.',
   fallbackLng: 'en',
+  react: {
+    useSuspense : true,
+  },
 })
