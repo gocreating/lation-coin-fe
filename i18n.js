@@ -10,6 +10,6 @@ module.exports = new NextI18Next({
   keySeparator: '.',
   fallbackLng: 'en',
   react: {
-    useSuspense : true,
+    useSuspense : false,
   },
 })
