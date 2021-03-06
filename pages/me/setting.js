@@ -63,7 +63,7 @@ const SettingPage = ({ t }) => {
   return (
     <AppLayout title={t('me.setting.title')} noAd>
       <Form>
-        <legend>金鑰</legend>
+        <legend>Bitfinex 金鑰</legend>
         <Form.Group as={Row}>
           <Form.Label column sm={12} md={2}>API Key</Form.Label>
           <Col sm={12} md={10}>
@@ -104,7 +104,7 @@ const SettingPage = ({ t }) => {
           </Alert>
         )}
         <Button
-          variant="outline-primary"
+          variant="outline-secondary"
           loading={updateMeta.isRequesting && updateTarget == 'credential'}
           onClick={handleSubmit(handleSubmitBitfinexCredential)}
         >
@@ -327,7 +327,7 @@ const SettingPage = ({ t }) => {
           )
         })}
         <Button
-          variant="outline-primary"
+          variant="outline-secondary"
           loading={updateMeta.isRequesting && updateTarget == 'fundingStrategy'}
           onClick={handleSubmit(handleSubmitBitfinexFundingStrategy)}
         >
