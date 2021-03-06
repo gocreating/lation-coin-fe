@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
+    "date-fns": "^2.18.0",
     "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.21",
     "next": "10.0.4",
     "next-i18next": "^7.0.1",
     "next-redux-wrapper": "^6.0.2",
