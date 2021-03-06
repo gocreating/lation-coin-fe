@@ -106,7 +106,7 @@ const FundingPage = ({ t }) => {
                 融資錢包總餘額
                 <h3>
                   <Badge pill variant="info">
-                    {formatUSD(round(fundingWallet?.balance, 2))}
+                    {fundingWallet ? formatUSD(round(fundingWallet?.balance, 2)) : 'N/A'}
                   </Badge>
                 </h3>
               </Col>
@@ -114,7 +114,7 @@ const FundingPage = ({ t }) => {
                 融資錢包可用餘額
                 <h3>
                   <Badge pill variant="info">
-                    {formatUSD(round(fundingWallet?.available_balance, 2))}
+                    {fundingWallet ? formatUSD(round(fundingWallet?.available_balance, 2)) : 'N/A'}
                   </Badge>
                 </h3>
               </Col>
@@ -154,7 +154,7 @@ const FundingPage = ({ t }) => {
             <Card.Body>
               目前無出價及報價
             </Card.Body>
-          ) :(
+          ) : (
             <Table responsive="lg">
               <thead>
                 <tr>

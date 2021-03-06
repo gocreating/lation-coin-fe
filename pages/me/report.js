@@ -50,7 +50,7 @@ const ReportPage = ({ t }) => {
                   平均年化利率
                   <h3>
                     <Badge pill variant="info">
-                      {`${round(annualPercentageRate * 100 * 365, 2).toFixed(2)}%`}
+                      {annualPercentageRate ? `${round(annualPercentageRate * 100 * 365, 2).toFixed(2)}%` : 'N/A'}
                     </Badge>
                   </h3>
                 </Col>
@@ -59,42 +59,48 @@ const ReportPage = ({ t }) => {
           </Card>
           <Card>
             <Card.Header>最近30日USD融資明細</Card.Header>
-            <Table responsive="lg">
-              <thead>
-                <tr>
-                  <Th />
-                  <Th>日期</Th>
-                  <Th>幣別</Th>
-                  <Th>利息</Th>
-                  <Th>餘額</Th>
-                  <Th>利率</Th>
-                  <Th>年化利率</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {payments.map((payment, i) => {
-                  return (
-                    <tr key={payment.id}>
-                      <td>{`#${i + 1}`}</td>
-                      <td>{format(parseISO(payment.mts), 'yyyy/MM/dd HH:mm:ss')}</td>
-                      <td>{payment.currency}</td>
-                      <td>
-                        {payment.amount?.toFixed(8)}
-                      </td>
-                      <td>
-                        {payment.balance?.toFixed(8)}
-                      </td>
-                      <td>
-                        {`${round((payment.amount / payment.balance) * 100, 5).toFixed(5)}%`}
-                      </td>
-                      <td>
-                        {`${round((payment.amount / payment.balance) * 100 * 365, 2).toFixed(2)}%`}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+            {payments.length === 0 ? (
+              <Card.Body>
+                無收益紀錄
+              </Card.Body>
+            ) : (
+              <Table responsive="lg">
+                <thead>
+                  <tr>
+                    <Th />
+                    <Th>日期</Th>
+                    <Th>幣別</Th>
+                    <Th>利息</Th>
+                    <Th>餘額</Th>
+                    <Th>利率</Th>
+                    <Th>年化利率</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((payment, i) => {
+                    return (
+                      <tr key={payment.id}>
+                        <td>{`#${i + 1}`}</td>
+                        <td>{format(parseISO(payment.mts), 'yyyy/MM/dd HH:mm:ss')}</td>
+                        <td>{payment.currency}</td>
+                        <td>
+                          {payment.amount?.toFixed(8)}
+                        </td>
+                        <td>
+                          {payment.balance?.toFixed(8)}
+                        </td>
+                        <td>
+                          {`${round((payment.amount / payment.balance) * 100, 5).toFixed(5)}%`}
+                        </td>
+                        <td>
+                          {`${round((payment.amount / payment.balance) * 100 * 365, 2).toFixed(2)}%`}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            )}
           </Card>
         </>
       )}
