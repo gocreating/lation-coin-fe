@@ -1,7 +1,7 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
-import Button from 'react-bootstrap/Button'
+import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -9,10 +9,12 @@ import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Row from 'react-bootstrap/Row'
 import AppLayout from '../../components/AppLayout'
+import Button from '../../components/Button'
 import { getUserBitfinexConfig, updateUserBitfinexConfig, selectors as userSelectors } from '../../ducks/user'
 import { withTranslation } from '../../i18n'
 
 const SettingPage = ({ t }) => {
+  const [updateTarget, setUpdateTarget] = useState()
   const dispatch = useDispatch()
   const getMeta = useSelector(userSelectors.getGetBitfinexConfigMeta)
   const updateMeta = useSelector(userSelectors.getUpdateBitfinexConfigMeta)
@@ -35,6 +37,7 @@ const SettingPage = ({ t }) => {
     if (getMeta.isRequesting) {
       alert('You cannot update settings before they are initialized')
     }
+    setUpdateTarget('credential')
     dispatch(updateUserBitfinexConfig({
       api_key: config.bitfinex.api_key,
       api_secret: config.bitfinex.api_secret,
@@ -47,6 +50,7 @@ const SettingPage = ({ t }) => {
     if (getMeta.isRequesting) {
       alert('You cannot update settings before they are initialized')
     }
+    setUpdateTarget('fundingStrategy')
     dispatch(updateUserBitfinexConfig({
       funding_strategy: config.bitfinex.funding_strategy,
     }, () => {
@@ -94,8 +98,18 @@ const SettingPage = ({ t }) => {
             />
           </Col>
         </Form.Group>
-        <Button variant="primary" onClick={handleSubmit(handleSubmitBitfinexCredential)}>
-          測試並儲存
+        {!updateMeta.isRequesting && updateMeta.isRequestFail && updateTarget == 'credential' && (
+          <Alert variant="danger">
+            {updateMeta.error}
+          </Alert>
+        )}
+        <Button
+          variant="outline-primary"
+          loading={updateMeta.isRequesting && updateTarget == 'credential'}
+          onClick={handleSubmit(handleSubmitBitfinexCredential)}
+        >
+          <i className="fas fa-save" />
+          {' 儲存'}
         </Button>
       </Form>
       <hr />
@@ -312,8 +326,13 @@ const SettingPage = ({ t }) => {
             </Form.Group>
           )
         })}
-        <Button variant="primary" onClick={handleSubmit(handleSubmitBitfinexFundingStrategy)}>
-          套用策略
+        <Button
+          variant="outline-primary"
+          loading={updateMeta.isRequesting && updateTarget == 'fundingStrategy'}
+          onClick={handleSubmit(handleSubmitBitfinexFundingStrategy)}
+        >
+          <i className="fas fa-save" />
+          {' 套用策略'}
         </Button>
       </Form>
     </AppLayout>

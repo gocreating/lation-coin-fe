@@ -77,7 +77,8 @@ export const updateUserBitfinexConfig = (configs, onSuccess) => async (dispatch)
       dispatch(udpateUserBitfinexConfigSuccess(res))
       onSuccess && onSuccess()
     } else {
-      dispatch(udpateUserBitfinexConfigFail(new Error('Fail to update user configs'), res))
+      const result = await res.json()
+      dispatch(udpateUserBitfinexConfigFail(result.detail || 'Fail to update user configs', res))
     }
   } catch (err) {
     dispatch(udpateUserBitfinexConfigFail(err, res))
@@ -167,13 +168,16 @@ const reducer = (state = defaultState, action) => {
         .setIn(['configs', 'bitfinex'], config)
         .toJS()
     }
-    case UPDATE_USER_BITFINEX_CONFIG_FAIL:
+    case UPDATE_USER_BITFINEX_CONFIG_FAIL: {
+      const { error } = action.payload
       return fromJS(state)
         .setIn(['updateUserBitfinexConfigMeta', 'isRequesting'], false)
         .setIn(['updateUserBitfinexConfigMeta', 'isRequested'], true)
         .setIn(['updateUserBitfinexConfigMeta', 'isRequestSuccess'], false)
         .setIn(['updateUserBitfinexConfigMeta', 'isRequestFail'], true)
+        .setIn(['updateUserBitfinexConfigMeta', 'error'], error)
         .toJS()
+    }
     default:
       return state
   }
