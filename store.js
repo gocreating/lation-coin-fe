@@ -3,11 +3,13 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import authReducer from './ducks/auth'
+import fundingReducer from './ducks/funding'
 import reportReducer from './ducks/report'
 import userReducer from './ducks/user'
 
 const appReducer = combineReducers({
   auth: authReducer,
+  funding: fundingReducer,
   report: reportReducer,
   user: userReducer,
 })
