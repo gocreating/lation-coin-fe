@@ -3,14 +3,14 @@ import styled from 'styled-components'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
-import BSNav from 'react-bootstrap/Nav'
+import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectors as authSelectors, logout } from '../ducks/auth'
 import { i18n, withTranslation, Link } from '../i18n'
 import { API_HOST } from '../utils/config'
 
-const Nav = styled(BSNav)`
+const SubNav = styled(Nav)`
   & .nav-link {
     color: rgba(0,0,0,.5);
   }
@@ -74,28 +74,28 @@ const Navigation = ({ t }) => {
       {isAuth && (
         <Container>
           <hr style={{ marginTop: '0px' }} />
-          <Nav className="justify-content-center" variant="pills" activeKey={router.pathname}>
-            <Nav.Item>
+          <SubNav className="justify-content-center" variant="pills" activeKey={router.pathname}>
+            <SubNav.Item>
               <Link href="/me/setting" passHref>
-                <Nav.Link eventKey="/me/setting">{t('me.setting.title')}</Nav.Link>
+                <SubNav.Link eventKey="/me/setting">{t('me.setting.title')}</SubNav.Link>
               </Link>
-            </Nav.Item>
-            <Nav.Item>
+            </SubNav.Item>
+            <SubNav.Item>
               <Link href="/me/funding" passHref>
-                <Nav.Link eventKey="/me/funding">{t('me.funding.title')}</Nav.Link>
+                <SubNav.Link eventKey="/me/funding">{t('me.funding.title')}</SubNav.Link>
               </Link>
-            </Nav.Item>
-            <Nav.Item>
+            </SubNav.Item>
+            <SubNav.Item>
               <Link href="/me/report" passHref>
-                <Nav.Link eventKey="/me/report">{t('me.report.title')}</Nav.Link>
+                <SubNav.Link eventKey="/me/report">{t('me.report.title')}</SubNav.Link>
               </Link>
-            </Nav.Item>
-            <Nav.Item>
+            </SubNav.Item>
+            <SubNav.Item>
               <Link href="/me/payment" passHref>
-                <Nav.Link eventKey="/me/payment">{t('me.payment.title')}</Nav.Link>
+                <SubNav.Link eventKey="/me/payment">{t('me.payment.title')}</SubNav.Link>
               </Link>
-            </Nav.Item>
-          </Nav>
+            </SubNav.Item>
+          </SubNav>
         </Container>
       )}
     </>
