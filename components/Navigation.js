@@ -1,13 +1,27 @@
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
-import Nav from 'react-bootstrap/Nav'
+import BSNav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectors as authSelectors, logout } from '../ducks/auth'
 import { i18n, withTranslation, Link } from '../i18n'
 import { API_HOST } from '../utils/config'
+
+const Nav = styled(BSNav)`
+  & .nav-link {
+    color: rgba(0,0,0,.5);
+  }
+  & .nav-link:hover {
+    color: rgba(0,0,0,.7);
+  }
+  & .nav-link.active, & .nav-link:hover.active {
+    color: white;
+    background-color: rgb(85, 82, 115);
+  }
+`
 
 const Navigation = ({ t }) => {
   const router = useRouter()
