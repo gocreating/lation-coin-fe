@@ -4,12 +4,12 @@ import parseISO from 'date-fns/parseISO'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
-import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Table from 'react-bootstrap/Table'
 import AppLayout from '../../components/AppLayout'
+import Card from '../../components/Card'
 import Spinner from '../../components/Spinner'
+import Table, { Th } from '../../components/Table'
 import { getBitfinexInterestPayments, selectors as reportSelectors } from '../../ducks/report'
 import { formatUSD } from '../../utils/format'
 import { withTranslation } from '../../i18n'
@@ -34,8 +34,8 @@ const ReportPage = ({ t }) => {
         <Spinner />
       ) : (
         <>
-          <Card border="info" style={{ marginBottom: '2rem' }}>
-            <Card.Header>最近30日USD融資收益</Card.Header>
+          <Card border="info">
+            <Card.Header>最近30日USD融資總覽</Card.Header>
             <Card.Body>
               <Row>
                 <Col xs={6} md={3} lg={2}>
@@ -57,42 +57,45 @@ const ReportPage = ({ t }) => {
               </Row>
             </Card.Body>
           </Card>
-          <Table responsive="lg">
-            <thead>
-              <tr>
-                <th></th>
-                <th style={{ whiteSpace: 'nowrap' }}>日期</th>
-                <th style={{ whiteSpace: 'nowrap' }}>幣別</th>
-                <th style={{ whiteSpace: 'nowrap' }}>利息</th>
-                <th style={{ whiteSpace: 'nowrap' }}>餘額</th>
-                <th style={{ whiteSpace: 'nowrap' }}>利率</th>
-                <th style={{ whiteSpace: 'nowrap' }}>年化利率</th>
-              </tr>
-            </thead>
-            <tbody>
-              {payments.map((payment, i) => {
-                return (
-                  <tr key={payment.id}>
-                    <td>{`#${i + 1}`}</td>
-                    <td>{format(parseISO(payment.mts), 'yyyy/MM/dd HH:mm:ss')}</td>
-                    <td>{payment.currency}</td>
-                    <td>
-                      {payment.amount?.toFixed(8)}
-                    </td>
-                    <td>
-                      {payment.balance?.toFixed(8)}
-                    </td>
-                    <td>
-                      {`${round((payment.amount / payment.balance) * 100, 5).toFixed(5)}%`}
-                    </td>
-                    <td>
-                      {`${round((payment.amount / payment.balance) * 100 * 365, 2).toFixed(2)}%`}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </Table>
+          <Card>
+            <Card.Header>最近30日USD融資明細</Card.Header>
+            <Table responsive="lg">
+              <thead>
+                <tr>
+                  <Th />
+                  <Th>日期</Th>
+                  <Th>幣別</Th>
+                  <Th>利息</Th>
+                  <Th>餘額</Th>
+                  <Th>利率</Th>
+                  <Th>年化利率</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {payments.map((payment, i) => {
+                  return (
+                    <tr key={payment.id}>
+                      <td>{`#${i + 1}`}</td>
+                      <td>{format(parseISO(payment.mts), 'yyyy/MM/dd HH:mm:ss')}</td>
+                      <td>{payment.currency}</td>
+                      <td>
+                        {payment.amount?.toFixed(8)}
+                      </td>
+                      <td>
+                        {payment.balance?.toFixed(8)}
+                      </td>
+                      <td>
+                        {`${round((payment.amount / payment.balance) * 100, 5).toFixed(5)}%`}
+                      </td>
+                      <td>
+                        {`${round((payment.amount / payment.balance) * 100 * 365, 2).toFixed(2)}%`}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Card>
         </>
       )}
     </AppLayout>
