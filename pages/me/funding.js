@@ -1,10 +1,11 @@
 import round from 'lodash/round'
+import sortBy from 'lodash/sortBy'
 import format from 'date-fns/format'
 import getTime from 'date-fns/getTime'
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
 import parseISO from 'date-fns/parseISO'
 import zhTWLocale from 'date-fns/locale/zh-TW'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
@@ -39,12 +40,24 @@ const FundingPage = ({ t }) => {
   const credits = useSelector(fundingSelectors.getBitfinexFundingCredits)
   const getCreditsMeta = useSelector(fundingSelectors.getGetBitfinexFundingCreditsMeta)
   const cancelOfferMetaMap = useSelector(fundingSelectors.getCancelBitfinexFundingOfferMetaMap)
+  const [sortedCreditsMeta, setSortedCreditsMeta] = useState({
+    key: null,
+    direction: null,
+  })
 
   const handleCancelOfferClick = (offerId) => dispatch(cancelBitfinexFundingOffer(offerId))
   const fetchState = () => dispatch(getState())
   const fetchBitfinexWallets = () => dispatch(getBitfinexWallets())
   const fetchBitfinexFundingOffers = () => dispatch(getBitfinexFundingOffers('fUSD'))
   const fetchBitfinexFundingCredits = () => dispatch(getBitfinexFundingCredits('fUSD'))
+
+  const handleSortCredits = (selectedKey) => () => {
+    const { key, direction } = sortedCreditsMeta
+    setSortedCreditsMeta({
+      key: selectedKey,
+      direction: (key !== selectedKey || (key === selectedKey && direction !== 'ascending')) ? 'ascending' : 'descending',
+    })
+  }
 
   useEffect(() => {
     fetchState()
@@ -54,7 +67,21 @@ const FundingPage = ({ t }) => {
   }, [])
 
   const fundingWallet = wallets.find(wallet => wallet.wallet_type === 'funding')
-  const dailyInterest = credits.reduce((sum, credit) => (sum + credit.amount * credit.rate), 0);
+  const dailyInterest = credits.reduce((sum, credit) => (sum + credit.amount * credit.rate), 0)
+  let sortedCredits = credits.map(credit => {
+    return {
+      ...credit,
+      interestAmount: credit.amount * credit.rate,
+      closeTime: new Date(getTime(parseISO(credit.mts_create)) + credit.period * 86400000),
+    }
+  })
+  if (sortedCreditsMeta.key) {
+    if (sortedCreditsMeta.direction === 'ascending') {
+      sortedCredits = sortBy(sortedCredits, [sortedCreditsMeta.key])
+    } else if (sortedCreditsMeta.direction === 'descending') {
+      sortedCredits = sortBy(sortedCredits, [sortedCreditsMeta.key]).reverse()
+    }
+  }
 
   return (
     <AppLayout title={t('me.funding.title')} noAd>
@@ -180,7 +207,7 @@ const FundingPage = ({ t }) => {
 
       <Card>
         <Card.Header>
-          {credits.length === 0 ? '已提供資金' : `已提供資金（${credits.length} 筆）`}
+          {credits.length === 0 ? '已借出資金' : `已借出資金（${credits.length} 筆）`}
           <RefreshButton
             loading={getCreditsMeta.isRequesting}
             onClick={() => fetchBitfinexFundingCredits()}
@@ -191,40 +218,86 @@ const FundingPage = ({ t }) => {
         ) : (
           credits.length === 0 ? (
             <Card.Body>
-              目前無提供
+              目前無借出資金
             </Card.Body>
           ) : (
             <Table responsive="lg">
               <thead>
                 <tr>
                   <Th />
-                  <Th>數量</Th>
-                  <Th>日息</Th>
-                  <Th>日利率</Th>
-                  <Th>年化利率</Th>
-                  <Th>出借期間</Th>
-                  <Th>剩餘出借時間</Th>
-                  <Th>成交時間</Th>
-                  <Th>倉位</Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'amount' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('amount')}
+                  >
+                    數量
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'interestAmount' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('interestAmount')}
+                  >
+                    日息
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('rate')}
+                  >
+                    日利率
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('rate')}
+                  >
+                    年化利率
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'period' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('period')}
+                  >
+                    出借期間
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'closeTime' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('closeTime')}
+                  >
+                    剩餘出借時間
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'mts_create' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('mts_create')}
+                  >
+                    成交時間
+                  </Th>
+                  <Th
+                    sortable
+                    sortedDirection={sortedCreditsMeta.key === 'position_pair' ? sortedCreditsMeta.direction : null}
+                    onClick={handleSortCredits('position_pair')}
+                  >
+                    倉位
+                  </Th>
                 </tr>
               </thead>
               <tbody>
-                {credits.map((credit, index) => {
+                {sortedCredits.map((credit, index) => {
                   const now = new Date()
-                  const interestAmount = credit.amount * credit.rate
-                  const closeTime = new Date(getTime(parseISO(credit.mts_create)) + credit.period * 86400000)
                   return (
                     <tr key={credit.id}>
                       <td>{`#${index + 1}`}</td>
                       <td>{round(credit.amount, 2).toFixed(2)}</td>
-                      <td>{`${round(interestAmount, 3).toFixed(3)}`}</td>
+                      <td>{`${round(credit.interestAmount, 3).toFixed(3)}`}</td>
                       <td>{`${round(credit.rate * 100, 5).toFixed(5)}%`}</td>
                       <td>{`${round(credit.rate * 100 * 365, 1).toFixed(1)}%`}</td>
                       <td>{`${credit.period} 天`}</td>
                       <td>
-                        {closeTime < now
+                        {credit.closeTime < now
                           ? '結算中'
-                          : formatDistanceToNowStrict(closeTime, { roundingMethod: 'floor', locale: zhTWLocale })
+                          : formatDistanceToNowStrict(credit.closeTime, { roundingMethod: 'floor', locale: zhTWLocale })
                         }
                       </td>
                       <td>{format(parseISO(credit.mts_create), 'yyyy/MM/dd HH:mm:ss')}</td>
