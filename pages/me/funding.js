@@ -6,11 +6,14 @@ import parseISO from 'date-fns/parseISO'
 import zhTWLocale from 'date-fns/locale/zh-TW'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 import Badge from 'react-bootstrap/Badge'
-import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
+import BSCard from 'react-bootstrap/Card'
+import BSSpinner from 'react-bootstrap/Spinner'
+import BSTable from 'react-bootstrap/Table'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Table from 'react-bootstrap/Table'
 import AppLayout from '../../components/AppLayout'
 import Spinner from '../../components/Spinner'
 import {
@@ -24,6 +27,22 @@ import {
 import { formatUSD } from '../../utils/format'
 import { withTranslation } from '../../i18n'
 
+const Card = styled(BSCard)`
+  margin-bottom: 2rem;
+`
+
+const Table = styled(BSTable)`
+  margin-bottom: 0px;
+
+  & > thead > tr > td {
+    border-top: 0px;
+  }
+`
+
+const Th = styled.td`
+  white-space: nowrap;
+`
+
 const FundingPage = ({ t }) => {
   const dispatch = useDispatch()
 
@@ -35,7 +54,9 @@ const FundingPage = ({ t }) => {
   const getOffersMeta = useSelector(fundingSelectors.getGetBitfinexFundingOffersMeta)
   const credits = useSelector(fundingSelectors.getBitfinexFundingCredits)
   const getCreditsMeta = useSelector(fundingSelectors.getGetBitfinexFundingCreditsMeta)
+  const cancelOfferMetaMap = useSelector(fundingSelectors.getCancelBitfinexFundingOfferMetaMap)
 
+  const handleCancelOfferClick = (offerId) => dispatch(cancelBitfinexFundingOffer(offerId))
   const fetchState = () => dispatch(getState())
   const fetchBitfinexWallets = () => dispatch(getBitfinexWallets())
   const fetchBitfinexFundingOffers = (symbol) => dispatch(getBitfinexFundingOffers(symbol))
@@ -52,7 +73,7 @@ const FundingPage = ({ t }) => {
 
   return (
     <AppLayout title={t('me.funding.title')}>
-      <Card border="info" style={{ marginBottom: '2rem' }}>
+      <Card border="info">
         <Card.Header>總覽</Card.Header>
         {getStateMeta.isRequesting || getWalletsMeta.isRequesting ? (
           <Spinner />
@@ -89,22 +110,86 @@ const FundingPage = ({ t }) => {
       </Card>
 
       <Card>
-        <Card.Header>已提供資金</Card.Header>
+        <Card.Header>
+          {offers.length === 0 ? '出價及報價' : `出價及報價（${offers.length} 筆）`}
+        </Card.Header>
+        {getOffersMeta.isRequesting ? (
+          <Spinner />
+        ) : (
+          offers.length === 0 ? (
+            <Card.Body>
+              目前無出價及報價
+            </Card.Body>
+          ) :(
+            <Table responsive="lg">
+              <thead>
+                <tr>
+                  <Th>委託單號</Th>
+                  <Th>委託類別</Th>
+                  <Th>數量</Th>
+                  <Th>日利率</Th>
+                  <Th>年化利率</Th>
+                  <Th>出借期間</Th>
+                  <Th>操作</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {offers.map(offer => {
+                  const meta = cancelOfferMetaMap[offer.id] || {}
+                  return (
+                    <tr key={offer.id}>
+                      <td>{offer.id}</td>
+                      <td>{offer.symbol}</td>
+                      <td>{round(offer.amount, 2).toFixed(2)}</td>
+                      <td>{`${round(offer.rate * 100, 5).toFixed(5)}%`}</td>
+                      <td>{`${round(offer.rate * 365 * 100, 1).toFixed(1)}%`}</td>
+                      <td>{`${offer.period} 天`}</td>
+                      <td>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          disabled={meta.isRequesting}
+                          onClick={() => handleCancelOfferClick(offer.id)}
+                        >
+                          {meta.isRequesting ? (
+                            <BSSpinner
+                              as="span"
+                              animation="grow"
+                              size="sm"
+                            />
+                          ) : (
+                            <i className="fas fa-times" />
+                          )}
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          )
+        )}
+      </Card>
+
+      <Card>
+        <Card.Header>
+          {credits.length === 0 ? '已提供資金' : `已提供資金（${credits.length} 筆）`}
+        </Card.Header>
         {getCreditsMeta.isRequesting ? (
           <Spinner />
         ) : (
           <Table responsive="lg">
             <thead>
               <tr>
-                <th></th>
-                <th style={{ whiteSpace: 'nowrap' }}>數量</th>
-                <th style={{ whiteSpace: 'nowrap' }}>日息</th>
-                <th style={{ whiteSpace: 'nowrap' }}>日利率</th>
-                <th style={{ whiteSpace: 'nowrap' }}>年化利率</th>
-                <th style={{ whiteSpace: 'nowrap' }}>出借期間</th>
-                <th style={{ whiteSpace: 'nowrap' }}>剩餘出借時間</th>
-                <th style={{ whiteSpace: 'nowrap' }}>成交時間</th>
-                <th style={{ whiteSpace: 'nowrap' }}>倉位</th>
+                <Th />
+                <Th>數量</Th>
+                <Th>日息</Th>
+                <Th>日利率</Th>
+                <Th>年化利率</Th>
+                <Th>出借期間</Th>
+                <Th>剩餘出借時間</Th>
+                <Th>成交時間</Th>
+                <Th>倉位</Th>
               </tr>
             </thead>
             <tbody>
