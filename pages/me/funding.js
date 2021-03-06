@@ -15,6 +15,7 @@ import BSTable from 'react-bootstrap/Table'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import AppLayout from '../../components/AppLayout'
+import RefreshButton from '../../components/RefreshButton'
 import Spinner from '../../components/Spinner'
 import {
   cancelBitfinexFundingOffer,
@@ -29,6 +30,11 @@ import { withTranslation } from '../../i18n'
 
 const Card = styled(BSCard)`
   margin-bottom: 2rem;
+`
+
+Card.Header = styled(BSCard.Header)`
+  display: flex;
+  align-items: center;
 `
 
 const Table = styled(BSTable)`
@@ -59,22 +65,32 @@ const FundingPage = ({ t }) => {
   const handleCancelOfferClick = (offerId) => dispatch(cancelBitfinexFundingOffer(offerId))
   const fetchState = () => dispatch(getState())
   const fetchBitfinexWallets = () => dispatch(getBitfinexWallets())
-  const fetchBitfinexFundingOffers = (symbol) => dispatch(getBitfinexFundingOffers(symbol))
-  const fetchBitfinexFundingCredits = (symbol) => dispatch(getBitfinexFundingCredits(symbol))
+  const fetchBitfinexFundingOffers = () => dispatch(getBitfinexFundingOffers('fUSD'))
+  const fetchBitfinexFundingCredits = () => dispatch(getBitfinexFundingCredits('fUSD'))
 
   useEffect(() => {
     fetchState()
     fetchBitfinexWallets()
-    fetchBitfinexFundingOffers('fUSD')
-    fetchBitfinexFundingCredits('fUSD')
+    fetchBitfinexFundingOffers()
+    fetchBitfinexFundingCredits()
   }, [])
 
   const fundingWallet = wallets.find(wallet => wallet.wallet_type === 'funding')
+  const dailyInterest = credits.reduce((sum, credit) => (sum + credit.amount * credit.rate), 0);
 
   return (
-    <AppLayout title={t('me.funding.title')}>
+    <AppLayout title={t('me.funding.title')} noAd>
       <Card border="info">
-        <Card.Header>總覽</Card.Header>
+        <Card.Header>
+          總覽
+          <RefreshButton
+            loading={getStateMeta.isRequesting || getWalletsMeta.isRequesting}
+            onClick={() => {
+              fetchState()
+              fetchBitfinexWallets()
+            }}
+          />
+        </Card.Header>
         {getStateMeta.isRequesting || getWalletsMeta.isRequesting ? (
           <Spinner />
         ) : (
@@ -104,6 +120,14 @@ const FundingPage = ({ t }) => {
                   </Badge>
                 </h3>
               </Col>
+              <Col xs={12} md={3}>
+                預估每日利息
+                <h3>
+                  <Badge pill variant="info">
+                    {formatUSD(round(dailyInterest * 0.85, 2))}
+                  </Badge>
+                </h3>
+              </Col>
             </Row>
           </Card.Body>
         )}
@@ -112,6 +136,10 @@ const FundingPage = ({ t }) => {
       <Card>
         <Card.Header>
           {offers.length === 0 ? '出價及報價' : `出價及報價（${offers.length} 筆）`}
+          <RefreshButton
+            loading={getOffersMeta.isRequesting}
+            onClick={() => fetchBitfinexFundingOffers()}
+          />
         </Card.Header>
         {getOffersMeta.isRequesting ? (
           <Spinner />
@@ -174,6 +202,10 @@ const FundingPage = ({ t }) => {
       <Card>
         <Card.Header>
           {credits.length === 0 ? '已提供資金' : `已提供資金（${credits.length} 筆）`}
+          <RefreshButton
+            loading={getCreditsMeta.isRequesting}
+            onClick={() => fetchBitfinexFundingCredits()}
+          />
         </Card.Header>
         {getCreditsMeta.isRequesting ? (
           <Spinner />
