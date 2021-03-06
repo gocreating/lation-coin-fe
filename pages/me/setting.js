@@ -234,7 +234,10 @@ const SettingPage = ({ t }) => {
                   </Form.Group>
                   <hr />
                   {fields.length === 0 ? (
-                    <Button size="sm" variant="outline-secondary" onClick={() => insert(0, {})}>新增天數規則</Button>
+                    <Button size="sm" variant="outline-secondary" onClick={() => insert(0, {})}>
+                      <i className="fas fa-plus" />
+                      {' 新增天數規則'}
+                    </Button>
                   ) : (
                     fields.map((field, i) => {
                       const rules = watch(`bitfinex.funding_strategy.symbol_strategy.${symbol}.rate_to_period_rules`)

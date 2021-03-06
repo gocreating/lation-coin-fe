@@ -8,11 +8,10 @@ import zhTWLocale from 'date-fns/locale/zh-TW'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
-import Button from 'react-bootstrap/Button'
-import BSSpinner from 'react-bootstrap/Spinner'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import AppLayout from '../../components/AppLayout'
+import Button from '../../components/Button'
 import Card from '../../components/Card'
 import RefreshButton from '../../components/RefreshButton'
 import Spinner from '../../components/Spinner'
@@ -182,18 +181,10 @@ const FundingPage = ({ t }) => {
                         <Button
                           variant="outline-danger"
                           size="sm"
-                          disabled={meta.isRequesting}
+                          loading={meta.isRequesting}
                           onClick={() => handleCancelOfferClick(offer.id)}
                         >
-                          {meta.isRequesting ? (
-                            <BSSpinner
-                              as="span"
-                              animation="grow"
-                              size="sm"
-                            />
-                          ) : (
-                            <i className="fas fa-times" />
-                          )}
+                          <i className="fas fa-times" />
                         </Button>
                       </td>
                     </tr>
