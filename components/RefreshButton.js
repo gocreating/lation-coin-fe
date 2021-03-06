@@ -1,22 +1,12 @@
-import Button from 'react-bootstrap/Button'
-import Spinner from 'react-bootstrap/Spinner'
+import Button from './Button'
 
-const RefreshButton = ({ loading, ...rest }) => (
+const RefreshButton = ({ ...rest }) => (
   <Button
     variant="light"
     size="sm"
-    disabled={loading}
     {...rest}
   >
-    {loading ? (
-      <Spinner
-        as="span"
-        animation="grow"
-        size="sm"
-      />
-    ) : (
-      <i className="fas fa-sync-alt" />
-    )}
+    <i className="fas fa-sync-alt" />
   </Button>
 )
 
