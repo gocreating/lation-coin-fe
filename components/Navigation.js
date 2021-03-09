@@ -49,10 +49,10 @@ const Navigation = ({ t }) => {
                 <Nav.Link>{t('navbar.title')}</Nav.Link>
               </Link>
               <Link href="/usage" passHref>
-                <Nav.Link>{t('navbar.usage')}</Nav.Link>
+                <Nav.Link disabled>{t('navbar.usage')}</Nav.Link>
               </Link>
               <Link href="/pricing" passHref>
-                <Nav.Link>{t('navbar.pricing')}</Nav.Link>
+                <Nav.Link disabled>{t('navbar.pricing')}</Nav.Link>
               </Link>
             </Nav>
             <Nav>
@@ -92,7 +92,7 @@ const Navigation = ({ t }) => {
             </SubNav.Item>
             <SubNav.Item>
               <Link href="/me/payment" passHref>
-                <SubNav.Link eventKey="/me/payment">{t('me.payment.title')}</SubNav.Link>
+                <SubNav.Link eventKey="/me/payment" disabled>{t('me.payment.title')}</SubNav.Link>
               </Link>
             </SubNav.Item>
           </SubNav>
