@@ -65,7 +65,7 @@ const FundingPage = ({ t }) => {
     fetchBitfinexFundingCredits()
   }, [])
 
-  const fundingWallet = wallets.find(wallet => wallet.wallet_type === 'funding')
+  const fundingWallet = wallets.find(wallet => wallet.wallet_type === 'funding' && wallet.currency === 'USD')
   const dailyInterest = credits.reduce((sum, credit) => (sum + credit.amount * credit.rate), 0)
   let sortedCredits = credits.map(credit => {
     return {
