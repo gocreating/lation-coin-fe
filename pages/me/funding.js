@@ -13,6 +13,7 @@ import Row from 'react-bootstrap/Row'
 import AppLayout from '../../components/AppLayout'
 import Button from '../../components/Button'
 import Card from '../../components/Card'
+import LoadFail from '../../components/LoadFail'
 import RefreshButton from '../../components/RefreshButton'
 import Spinner from '../../components/Spinner'
 import Table, { Th } from '../../components/Table'
@@ -59,10 +60,12 @@ const FundingPage = ({ t }) => {
   }
 
   useEffect(() => {
-    fetchState()
-    fetchBitfinexWallets()
-    fetchBitfinexFundingOffers()
-    fetchBitfinexFundingCredits()
+    if (process.browser) {
+      fetchState()
+      fetchBitfinexWallets()
+      fetchBitfinexFundingOffers()
+      fetchBitfinexFundingCredits()
+    }
   }, [])
 
   const fundingWallet = wallets.find(wallet => wallet.wallet_type === 'funding' && wallet.currency === 'USD')
@@ -149,49 +152,53 @@ const FundingPage = ({ t }) => {
         {getOffersMeta.isRequesting ? (
           <Spinner />
         ) : (
-          offers.length === 0 ? (
-            <Card.Body>
-              目前無出價及報價
-            </Card.Body>
+          getOffersMeta.isRequestFail ? (
+            <LoadFail />
           ) : (
-            <Table responsive="lg">
-              <thead>
-                <tr>
-                  <Th>委託單號</Th>
-                  <Th>委託類別</Th>
-                  <Th>數量</Th>
-                  <Th>日利率</Th>
-                  <Th>年化利率</Th>
-                  <Th>出借期間</Th>
-                  <Th>操作</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {offers.map(offer => {
-                  const meta = cancelOfferMetaMap[offer.id] || {}
-                  return (
-                    <tr key={offer.id}>
-                      <td>{offer.id}</td>
-                      <td>{offer.symbol}</td>
-                      <td>{round(offer.amount, 2).toFixed(2)}</td>
-                      <td>{`${round(offer.rate * 100, 5).toFixed(5)}%`}</td>
-                      <td>{`${round(offer.rate * 365 * 100, 1).toFixed(1)}%`}</td>
-                      <td>{`${offer.period} 天`}</td>
-                      <td>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          loading={meta.isRequesting}
-                          onClick={() => handleCancelOfferClick(offer.id)}
-                        >
-                          <i className="fas fa-times" />
-                        </Button>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+            offers.length === 0 ? (
+              <Card.Body>
+                目前無出價及報價
+              </Card.Body>
+            ) : (
+              <Table responsive="lg">
+                <thead>
+                  <tr>
+                    <Th>委託單號</Th>
+                    <Th>委託類別</Th>
+                    <Th>數量</Th>
+                    <Th>日利率</Th>
+                    <Th>年化利率</Th>
+                    <Th>出借期間</Th>
+                    <Th>操作</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {offers.map(offer => {
+                    const meta = cancelOfferMetaMap[offer.id] || {}
+                    return (
+                      <tr key={offer.id}>
+                        <td>{offer.id}</td>
+                        <td>{offer.symbol}</td>
+                        <td>{round(offer.amount, 2).toFixed(2)}</td>
+                        <td>{`${round(offer.rate * 100, 5).toFixed(5)}%`}</td>
+                        <td>{`${round(offer.rate * 365 * 100, 1).toFixed(1)}%`}</td>
+                        <td>{`${offer.period} 天`}</td>
+                        <td>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            loading={meta.isRequesting}
+                            onClick={() => handleCancelOfferClick(offer.id)}
+                          >
+                            <i className="fas fa-times" />
+                          </Button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            )
           )
         )}
       </Card>
@@ -207,97 +214,101 @@ const FundingPage = ({ t }) => {
         {getCreditsMeta.isRequesting ? (
           <Spinner />
         ) : (
-          credits.length === 0 ? (
-            <Card.Body>
-              目前無借出資金
-            </Card.Body>
+          getCreditsMeta.isRequestFail ? (
+            <LoadFail />
           ) : (
-            <Table responsive="lg">
-              <thead>
-                <tr>
-                  <Th />
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'amount' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('amount')}
-                  >
-                    數量
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'interestAmount' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('interestAmount')}
-                  >
-                    日息
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('rate')}
-                  >
-                    日利率
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('rate')}
-                  >
-                    年化利率
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'period' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('period')}
-                  >
-                    出借期間
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'closeTime' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('closeTime')}
-                  >
-                    剩餘出借時間
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'mts_create' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('mts_create')}
-                  >
-                    成交時間
-                  </Th>
-                  <Th
-                    sortable
-                    sortedDirection={sortedCreditsMeta.key === 'position_pair' ? sortedCreditsMeta.direction : null}
-                    onClick={handleSortCredits('position_pair')}
-                  >
-                    倉位
-                  </Th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedCredits.map((credit, index) => {
-                  const now = new Date()
-                  return (
-                    <tr key={credit.id}>
-                      <td>{`#${index + 1}`}</td>
-                      <td>{round(credit.amount, 2).toFixed(2)}</td>
-                      <td>{`${round(credit.interestAmount, 3).toFixed(3)}`}</td>
-                      <td>{`${round(credit.rate * 100, 5).toFixed(5)}%`}</td>
-                      <td>{`${round(credit.rate * 100 * 365, 1).toFixed(1)}%`}</td>
-                      <td>{`${credit.period} 天`}</td>
-                      <td>
-                        {credit.closeTime < now
-                          ? '結算中'
-                          : formatDistanceToNowStrict(credit.closeTime, { roundingMethod: 'floor', locale: zhTWLocale })
-                        }
-                      </td>
-                      <td>{format(parseISO(credit.mts_create), 'yyyy/MM/dd HH:mm:ss')}</td>
-                      <td>{credit.position_pair}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </Table>
+            credits.length === 0 ? (
+              <Card.Body>
+                目前無借出資金
+              </Card.Body>
+            ) : (
+              <Table responsive="lg">
+                <thead>
+                  <tr>
+                    <Th />
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'amount' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('amount')}
+                    >
+                      數量
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'interestAmount' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('interestAmount')}
+                    >
+                      日息
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('rate')}
+                    >
+                      日利率
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'rate' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('rate')}
+                    >
+                      年化利率
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'period' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('period')}
+                    >
+                      出借期間
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'closeTime' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('closeTime')}
+                    >
+                      剩餘出借時間
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'mts_create' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('mts_create')}
+                    >
+                      成交時間
+                    </Th>
+                    <Th
+                      sortable
+                      sortedDirection={sortedCreditsMeta.key === 'position_pair' ? sortedCreditsMeta.direction : null}
+                      onClick={handleSortCredits('position_pair')}
+                    >
+                      倉位
+                    </Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedCredits.map((credit, index) => {
+                    const now = new Date()
+                    return (
+                      <tr key={credit.id}>
+                        <td>{`#${index + 1}`}</td>
+                        <td>{round(credit.amount, 2).toFixed(2)}</td>
+                        <td>{`${round(credit.interestAmount, 3).toFixed(3)}`}</td>
+                        <td>{`${round(credit.rate * 100, 5).toFixed(5)}%`}</td>
+                        <td>{`${round(credit.rate * 100 * 365, 1).toFixed(1)}%`}</td>
+                        <td>{`${credit.period} 天`}</td>
+                        <td>
+                          {credit.closeTime < now
+                            ? '結算中'
+                            : formatDistanceToNowStrict(credit.closeTime, { roundingMethod: 'floor', locale: zhTWLocale })
+                          }
+                        </td>
+                        <td>{format(parseISO(credit.mts_create), 'yyyy/MM/dd HH:mm:ss')}</td>
+                        <td>{credit.position_pair}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            )
           )
         )}
       </Card>
