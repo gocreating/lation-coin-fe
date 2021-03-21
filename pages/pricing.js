@@ -11,6 +11,7 @@ import { createOrder, selectors as orderSelectors } from '../ducks/order'
 import { listProducts, selectors as productSelectors } from '../ducks/product'
 import AppLayout from '../components/AppLayout'
 import Button from '../components/Button'
+import Spinner from '../components/Spinner'
 import { withTranslation } from '../i18n'
 import { API_HOST } from '../utils/config'
 
@@ -39,13 +40,13 @@ const PricingPage = ({ t }) => {
   const dispatch = useDispatch()
   const isAuth = useSelector(authSelectors.getIsAuth)
   const products = useSelector(productSelectors.getProducts)
-  const listOrdersMata = useSelector(orderSelectors.getListOrdersMeta)
+  const listProductsMeta = useSelector(productSelectors.getListProductsMeta)
   const createOrderMata = useSelector(orderSelectors.getCreateOrderMeta)
   const [selectedPlans, setSeletedPlans] = useState([])
 
   useEffect(() => {
     dispatch(listProducts())
-  }, [isAuth])
+  }, [])
 
   const handleSelectPlan = (isChecked, plan) => {
     if (isChecked) {
@@ -56,6 +57,10 @@ const PricingPage = ({ t }) => {
   }
 
   const handleCreateOrder = async () => {
+    if (!isAuth) {
+      alert('Please login first')
+      return
+    }
     const plan = selectedPlans[0]
     dispatch(createOrder(plan.id, (order) => {
       router.push(`${API_HOST}/orders/${order.id}/charge`)
@@ -69,6 +74,9 @@ const PricingPage = ({ t }) => {
     <AppLayout title={t('common:pricing.title')} titleSuffix={false} noAd>
       <h2 className="text-center">{t('common:pricing.title')}</h2>
       <Container>
+        {listProductsMeta.isRequesting && (
+          <Spinner />
+        )}
         {products.map(product => {
           return (
             <div key={product.id}>
@@ -117,9 +125,9 @@ const PricingPage = ({ t }) => {
       <Container>
         <Button
           disabled={selectedPlans.length !== 1}
-          loading={listOrdersMata.isRequesting || createOrderMata.isRequesting}
+          loading={createOrderMata.isRequesting}
           onClick={() => handleCreateOrder()}
-          variant={selectedPlans.length !== 1 ? "outline-dark" : "dark"}
+          variant={selectedPlans.length !== 1 ? 'outline-dark' : 'dark'}
           size="lg"
         >
           <i className="fas fa-shopping-cart" />
