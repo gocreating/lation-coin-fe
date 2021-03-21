@@ -1,0 +1,28 @@
+{
+  "productMap": {
+    "CFB": {
+      "title": "Coin Funding Strategy Bot",
+      "description": "Automatically manage your Bitfinex funding market orders. Alternatively, you can also manage by yourself on demand",
+      "planMap": {
+        "7_DAY_FREE_TRIAL": {
+          "title": "7 Days Free Trial",
+          "description": "Free trial for first enrollment"
+        },
+        "1_MONTH": {
+          "title": "Extend One Month",
+          "description": "Extend your subscription for one month"
+        },
+        "3_MONTH": {
+          "title": "Extend Three Months",
+          "description": "Extend your subscription for three month"
+        }
+      }
+    }
+  },
+  "choosePlan": {
+    "cta": "Choose This Plan"
+  },
+  "checkout": {
+    "cta": "Checkout"
+  }
+}

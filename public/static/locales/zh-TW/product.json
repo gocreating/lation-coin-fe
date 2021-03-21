@@ -1,0 +1,28 @@
+{
+  "productMap": {
+    "CFB": {
+      "title": "放貸策略機器人",
+      "description": "自動化操作 Bitfinex 融資市場，24 小時替您監控掛單，必要時也可以人為介入管理。",
+      "planMap": {
+        "7_DAY_FREE_TRIAL": {
+          "title": "七日試用",
+          "description": "首次使用可享七日免費體驗"
+        },
+        "1_MONTH": {
+          "title": "儲值一個月",
+          "description": "新購入者從購買時間起算，續約者從目前到期日起算，往後延長使用期限一個月"
+        },
+        "3_MONTH": {
+          "title": "儲值三個月",
+          "description": "新購入者從購買時間起算，續約者從目前到期日起算，往後延長使用期限三個月"
+        }
+      }
+    }
+  },
+  "choosePlan": {
+    "cta": "選擇此方案"
+  },
+  "checkout": {
+    "cta": "結帳"
+  }
+}

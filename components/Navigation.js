@@ -52,7 +52,7 @@ const Navigation = ({ t }) => {
                 <Nav.Link disabled>{t('navbar.usage')}</Nav.Link>
               </Link>
               <Link href="/pricing" passHref>
-                <Nav.Link disabled>{t('navbar.pricing')}</Nav.Link>
+                <Nav.Link>{t('navbar.pricing')}</Nav.Link>
               </Link>
             </Nav>
             <Nav>

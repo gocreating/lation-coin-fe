@@ -19,6 +19,9 @@
     "title": "Coin",
     "description": "幣勝提供數位貨幣套利服務，僅需銅板即可投資"
   },
+  "pricing": {
+    "title": "Products and Pricing"
+  },
   "auth": {
     "loginError": {
       "title": "Login Failed",
