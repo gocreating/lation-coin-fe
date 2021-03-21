@@ -4,6 +4,7 @@ import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import authReducer from './ducks/auth'
 import fundingReducer from './ducks/funding'
+import orderReducer from './ducks/order'
 import productReducer from './ducks/product'
 import reportReducer from './ducks/report'
 import userReducer from './ducks/user'
@@ -11,6 +12,7 @@ import userReducer from './ducks/user'
 const appReducer = combineReducers({
   auth: authReducer,
   funding: fundingReducer,
+  order: orderReducer,
   product: productReducer,
   report: reportReducer,
   user: userReducer,
