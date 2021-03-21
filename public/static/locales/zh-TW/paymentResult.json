@@ -1,0 +1,12 @@
+{
+  "title": "付款結果",
+  "paymentSuccess": {
+    "title": "付款成功",
+    "description": "您的付款已確認。",
+    "cta": "檢視付款紀錄"
+  },
+  "paymentError": {
+    "title": "付款失敗",
+    "cta": "重新購買"
+  }
+}

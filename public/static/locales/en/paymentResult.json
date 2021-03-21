@@ -1,0 +1,12 @@
+{
+  "title": "Payment Result",
+  "paymentSuccess": {
+    "title": "Payment Success",
+    "description": "Your payment is confirmed.",
+    "cta": "View Payments"
+  },
+  "paymentError": {
+    "title": "Payment Failed",
+    "cta": "Retry"
+  }
+}
