@@ -19,6 +19,9 @@
     "title": "幣勝",
     "description": "幣勝提供數位貨幣套利服務，僅需銅板即可投資"
   },
+  "pricing": {
+    "title": "產品與價格方案"
+  },
   "auth": {
     "loginError": {
       "title": "登入失敗",
@@ -44,7 +47,19 @@
       "title": "收益報告"
     },
     "payment": {
-      "title": "儲值紀錄"
+      "title": "儲值紀錄",
+      "card": {
+        "noRecord": "您尚無儲值紀錄。"
+      },
+      "table": {
+        "purchaseTime": "購買時間",
+        "product": "產品",
+        "plan": "方案",
+        "billedAmount": "購買金額",
+        "effectivePeriod": "有效期間",
+        "remainingTime": "剩餘時間",
+        "expired": "已過期"
+      }
     }
   }
 }

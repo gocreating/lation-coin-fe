@@ -19,6 +19,9 @@
     "title": "Coin",
     "description": "幣勝提供數位貨幣套利服務，僅需銅板即可投資"
   },
+  "pricing": {
+    "title": "Products and Pricing"
+  },
   "auth": {
     "loginError": {
       "title": "Login Failed",
@@ -44,7 +47,19 @@
       "title": "Report"
     },
     "payment": {
-      "title": "Payment"
+      "title": "Payment",
+      "card": {
+        "noRecord": "You don't have payment histories."
+      },
+      "table": {
+        "purchaseTime": "Purchase Time",
+        "product": "Product",
+        "plan": "Plan",
+        "billedAmount": "Billed Amount",
+        "effectivePeriod": "Effective Period",
+        "remainingTime": "Remaining Time",
+        "expired": "Expired"
+      }
     }
   }
 }
