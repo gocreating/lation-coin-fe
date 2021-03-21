@@ -47,7 +47,19 @@
       "title": "Report"
     },
     "payment": {
-      "title": "Payment"
+      "title": "Payment",
+      "card": {
+        "noRecord": "You don't have payment histories."
+      },
+      "table": {
+        "purchaseTime": "Purchase Time",
+        "product": "Product",
+        "plan": "Plan",
+        "billedAmount": "Billed Amount",
+        "effectivePeriod": "Effective Period",
+        "remainingTime": "Remainingg Time",
+        "expired": "Expired"
+      }
     }
   }
 }
