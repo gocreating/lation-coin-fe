@@ -259,6 +259,34 @@ const SettingPage = ({ t }) => {
                       />
                     </Col>
                   </Form.Group>
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={12} md={4} xl={3}>最高委託年化利率</Form.Label>
+                    <Col sm={12} md={4} xl={3}>
+                      <Controller
+                        control={control}
+                        name={`bitfinex.funding_strategy.symbol_strategy.${symbol}.rate_strategy.max_per_offer_rate`}
+                        defaultValue={0}
+                        render={({ onChange, value, ref }) => (
+                          <>
+                            <InputGroup>
+                              <Form.Control
+                                ref={ref}
+                                type="number" min={0} max={2555} step={0.2}
+                                onChange={e => onChange(parseFloat(e.target.value))}
+                                value={value}
+                              />
+                              <InputGroup.Append>
+                              <InputGroup.Text>%</InputGroup.Text>
+                              </InputGroup.Append>
+                            </InputGroup>
+                            <Form.Text className="text-muted">
+                              {`日利率 ${round(value / 365, 5).toFixed(5)}%`}
+                            </Form.Text>
+                          </>
+                        )}
+                      />
+                    </Col>
+                  </Form.Group>
                   <hr />
                   {fields.length === 0 ? (
                     <Button size="sm" variant="outline-secondary" onClick={() => insert(0, {})}>
